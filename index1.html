@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Attendance System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #studentForm {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 200px;
+    }
+    button {
+      padding: 8px 16px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #333;
+      color: white;
+    }
+    .present {
+      background-color: #c8e6c9;
+    }
+    .absent {
+      background-color: #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📋 Student Attendance System</h1>
+
+  <div id="studentForm">
+    <input type="text" id="studentName" placeholder="Enter student name" />
+    <button onclick="addStudent()">Add Student</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student Name</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="attendanceTable">
+      <!-- Student rows will appear here -->
+    </tbody>
+  </table>
+
+  <script>
+    let students = [];
+
+    function addStudent() {
+      const nameInput = document.getElementById('studentName');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Please enter a student name.");
+        return;
+      }
+
+      const student = {
+        id: students.length + 1,
+        name: name,
+        status: 'Absent'
+      };
+
+      students.push(student);
+      nameInput.value = '';
+      renderTable();
+    }
+
+    function markAttendance(id, status) {
+      const student = students.find(s => s.id === id);
+      if (student) {
+        student.status = status;
+        renderTable();
+      }
+    }
+
+    function removeStudent(id) {
+      students = students.filter(s => s.id !== id);
+      renderTable();
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById('attendanceTable');
+      tableBody.innerHTML = '';
+
+      students.forEach((student, index) => {
+        const row = document.createElement('tr');
+        row.className = student.status.toLowerCase();
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${student.name}</td>
+          <td>${student.status}</td>
+          <td>
+            <button onclick="markAttendance(${student.id}, 'Present')">Present</button>
+            <button onclick="markAttendance(${student.id}, 'Absent')">Absent</button>
+            <button onclick="removeStudent(${student.id})">Remove</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>
